@@ -28,7 +28,7 @@ namespace T_RexReadOnlyAPI
             {
                 socket.Connect("8.8.8.8", 65530);
                 IPEndPoint endPoint = socket.LocalEndPoint as IPEndPoint;
-                answer = endPoint.Address.ToString();                  
+                answer = endPoint.Address.ToString();
             }
             return answer;
         }
@@ -40,7 +40,7 @@ namespace T_RexReadOnlyAPI
             backgroundPolling.Start();
             httpHandler.Start();
         }
-        
+
         /// <summary>
         /// Creates readonly monitor on selected ip address and port
         /// </summary>
@@ -64,13 +64,13 @@ namespace T_RexReadOnlyAPI
         /// <summary>
         /// Creates readonly monitor on default ip address and default port(4069)
         /// </summary>   
-        public ReadOnlyAPI()  : this(GetIpAddress(), 4069) { }
+        public ReadOnlyAPI() : this(GetIpAddress(), 4069) { }
 
         /// <summary>
         /// Updates cached "summary" response every sec with 50ms timeout
         /// </summary>
         void PollingThread()
-        {      
+        {
             while (true)
             {
                 lock (responseLockObject)
@@ -81,7 +81,7 @@ namespace T_RexReadOnlyAPI
                     }
                     catch //is thrown on timeout
                     {
-                        cachedResponse = "T-Rex is offline or \"127.0.0.1:" + 4067 + "\" is wrong T-Rex address";
+                        cachedResponse = "T-Rex is offline or \"127.0.0.1:" + 4067 + "\" is wrong T-Rex HTTP address";
                         Console.WriteLine(cachedResponse);
                     }
                 }
@@ -98,6 +98,7 @@ namespace T_RexReadOnlyAPI
             httpListener.Prefixes.Add("http://" + ipAddress + ":" + ipPort + "/");
             httpListener.Prefixes.Add("http://" + "localhost" + ":" + ipPort + "/");
             httpListener.Start();
+
             while (true)
             {
                 IAsyncResult result = httpListener.BeginGetContext(new AsyncCallback(ListenerCallback), httpListener);
@@ -151,9 +152,9 @@ namespace T_RexReadOnlyAPI
                     Console.WriteLine("Wrong number of arguments");
                     return;
             }
-            
+
             api.Start();
-            
+
         }
     }
 }
